@@ -6,9 +6,6 @@ const loadImage = require('blueimp-load-image');
 
 window.addEventListener('DOMContentLoaded', () => {
     const baseTitle = document.title;
-    const supportedExtensions = [
-        "jpg", "jpeg", "arw",
-    ];
 
     const util = {
         get arguments() {
@@ -37,14 +34,25 @@ window.addEventListener('DOMContentLoaded', () => {
             return str.replace(/['()# ]/g, c => ("%" + c.charCodeAt(0).toString(16)));
         },
         
+        /* Get the extension of the file, remove the leading dot and force only lowercase characters. */
+        getExtension(filepath) {
+            return path.extname(filepath).slice(1).toLowerCase();
+        },
+
+        isJpg(filepath) {
+            return util.getExtension(filepath) === "jpg" || util.getExtension(filepath) === "jpeg";
+        },
+
+        isRaw(filepath) {
+            return util.getExtension(filepath) === "arw";
+        },
+
         isImage(filepath) {
-            /* Get the extension of the file, remove the leading dot and force only lowercase characters. */
-            const ext = path.extname(filepath).slice(1).toLowerCase();
-            return ext && supportedExtensions.indexOf(ext) >= 0;
+            return util.isJpg(filepath) || util.isRaw(filepath);
         },
 
         getAllFilesInSameDir(filepath) {
-            const dirpath = this.getAbsolutePath(path.dirname(filepath));
+            const dirpath = util.getAbsolutePath(path.dirname(filepath));
             const filenames = fs.readdirSync(dirpath);
             const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
             return absolutPaths;

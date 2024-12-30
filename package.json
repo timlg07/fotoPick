@@ -7,8 +7,8 @@
         "start": "electron .",
         "dist": "electron-builder",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "demo": "electron . ..\\images\\0.JPG ..\\images\\1.JPG ..\\images\\2.JPG ..\\images\\3.JPG ..\\images\\4.JPG",
-        "demo2": "electron . ..\\images\\2.JPG"
+        "demo": "electron . ..\\images\\DSC0.ARW ..\\images\\DSC0.JPG ..\\images\\DSC1.ARW ..\\images\\DSC1.JPG",
+        "demo2": "electron . ..\\images\\DSC0.ARW"
     },
     "devDependencies": {
         "electron": "33.2.1",

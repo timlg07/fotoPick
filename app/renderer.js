@@ -23,9 +23,10 @@ window.addEventListener('view-ready', event => {
 
     function loadCurrentImage() {
         if (fileIndexInRange(currentImageIndex)) {
+            console.log(images[currentImageIndex]);
             loadImage(
-                images[currentImageIndex], 
-                fileNames[currentImageIndex]
+                images[currentImageIndex].jpg.urlEncoded, 
+                images[currentImageIndex].jpg.baseName, 
             );
         } else {
             util.updateTitle("Nothing to view.");
@@ -100,6 +101,23 @@ window.addEventListener('view-ready', event => {
         }
     }
 
+    function filename2obj(filename) {
+        const abs = util.getAbsolutePath(filename);
+        const enc = util.encodeChars(util.handleSlashes(abs));
+        const ext = util.getExtension(filename);
+        const base = util.getFileName(filename);
+        const name = base.substring(0, base.length - ext.length - 1);
+
+        return {
+            name: filename,
+            urlEncoded: enc,
+            urlNotEncoded: abs,
+
+            extension: ext,
+            baseName: name
+        };
+    }
+
     function scanFiles(files) {
         let supportedFiles = files.filter(util.isImage);
 
@@ -109,15 +127,14 @@ window.addEventListener('view-ready', event => {
             supportedFiles = supportedFiles.concat(otherFiles.filter(util.isImage));
         }
 
-        const fileNames = supportedFiles.map(v => util.getFileName(v));
-        const fileURLs  = supportedFiles.map(util.getAbsolutePath);
-        const fileURLEncoded = fileURLs.map(util.handleSlashes).map(util.encodeChars);
+        const jpgs = supportedFiles.filter(util.isJpg).map(filename2obj);
+        const raws = supportedFiles.filter(util.isRaw).map(filename2obj);
+        const combined = raws.map(raw => {
+            const jpg = jpgs.find(j => j.baseName === raw.baseName);
+            return {raw, jpg};
+        });
 
-        return {
-            names: fileNames,
-            urls: fileURLEncoded,
-            urlsNotEncoded: fileURLs
-        };
+        return combined;
     }
     
     function switchImage(newIndex) {
@@ -138,7 +155,7 @@ window.addEventListener('view-ready', event => {
     }
 
 
-    let images, fileNames, imagesNotEncoded
+    let images = scanFiles(util.arguments),
         useCanvas = false, 
         ctrlKeyDown = false,
         autoFitSize = true,
@@ -147,13 +164,6 @@ window.addEventListener('view-ready', event => {
         currentImageIndex  = 0,
         currentImageWidth  = 0,
         currentImageHeight = 0;
-
-    (function parseArguments() {
-        const supportedFilesFromArguments = scanFiles(util.arguments);
-        images = supportedFilesFromArguments.urls;
-        fileNames = supportedFilesFromArguments.names;
-        imagesNotEncoded = supportedFilesFromArguments.urlsNotEncoded;
-    })();
 
     updateNextPrevMenuItems();
     loadCurrentImage();
@@ -173,7 +183,7 @@ window.addEventListener('view-ready', event => {
         },
 
         copyImgToClipboard() {
-            util.writeImgToClipboard(imagesNotEncoded[currentImageIndex]);
+            util.writeImgToClipboard(images[currentImageIndex].jpg.urlNotEncoded);
         },
         
         toggleCanvasMode() {
