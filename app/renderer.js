@@ -6,6 +6,7 @@ window.addEventListener('view-ready', event => {
         util.updateTitle("Loading.");
         util.loadImage(imgPath, {
             orientation: true,
+            meta: true,
             canvas: useCanvas
         }).then(data => {
             view.displayedImage = data.image;
@@ -14,6 +15,9 @@ window.addEventListener('view-ready', event => {
             scaleCanvas();
             util.updateTitle(imgName);
             updateNextPrevMenuItems();
+            
+            console.log('Exif data: ', data.exif) // requires exif extension
+            console.log('IPTC data: ', data.iptc) // requires iptc extension
         }).catch(r => {
             view.displayedImage = null;
             util.updateTitle("Error loading the image.");
@@ -23,10 +27,9 @@ window.addEventListener('view-ready', event => {
 
     function loadCurrentImage() {
         if (fileIndexInRange(currentImageIndex)) {
-            console.log(images[currentImageIndex]);
             loadImage(
-                images[currentImageIndex].jpg.urlEncoded, 
-                images[currentImageIndex].jpg.baseName, 
+                images[currentImageIndex][imageType].urlEncoded, 
+                images[currentImageIndex][imageType].baseName, 
             );
         } else {
             util.updateTitle("Nothing to view.");
@@ -156,6 +159,7 @@ window.addEventListener('view-ready', event => {
 
 
     let images = scanFiles(util.arguments),
+        imageType = 'jpg',
         useCanvas = false, 
         ctrlKeyDown = false,
         autoFitSize = true,
@@ -212,6 +216,11 @@ window.addEventListener('view-ready', event => {
         
         zoomOut() {
             applyZoom(-zoomDelta);
+        },
+
+        toggleRawJpg() {
+            imageType = imageType === 'raw' ? 'jpg' : 'raw';
+            loadCurrentImage();
         }
     };
 

@@ -11,7 +11,8 @@ const channels = {
         fit: 'setSizeToFitWin',
         zoomIn: 'zoomIn',
         zoomOut: 'zoomOut'
-    }
+    },
+    tgrj: 'toggleRawJpg',
 }
 
 module.exports = {
@@ -37,6 +38,14 @@ module.exports = {
                         id: "prev",
                         click: () => win.webContents.send(channels.prev),
                         accelerator: 'Left'
+                    },
+                    {
+                        label: "Show RAW version",
+                        id: "tgrj",
+                        click: () => {
+                            win.webContents.send(channels.tgrj);
+                        },
+                        accelerator: 'R'
                     },
                     {
                         type: "separator"
