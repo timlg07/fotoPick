@@ -46,7 +46,6 @@
     "dependencies": {
         "@electron/remote": "^2.1.2",
         "blueimp-load-image": "^5.16.0",
-        "custom-electron-titlebar": "4.2.8",
         "electron-localshortcut": "^3.2.1"
     }
 }

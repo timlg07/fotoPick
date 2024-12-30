@@ -1,7 +1,6 @@
 const { app, BrowserWindow, screen, Menu } = require('electron');
 const remote = require('@electron/remote/main');
 const localShortcut = require('electron-localshortcut');
-const { setupTitlebar, attachTitlebarToWindow } = require("custom-electron-titlebar/main");
 const path = require('path');
 const menu = require('./menu');
 
@@ -9,7 +8,6 @@ const menu = require('./menu');
 let win;
 
 remote.initialize();
-setupTitlebar();
 
 function createWindow() {
     /* Events that will get forwarded to the render process, because they impact the apps appearance. */
@@ -28,7 +26,6 @@ function createWindow() {
     win = new BrowserWindow({
         title: "imageViewer",
         icon: files.icon,
-        //frame: false,
 
         position: "center",
         width:  width  * .75,
@@ -36,9 +33,6 @@ function createWindow() {
         minWidth: 180,
         minHeight: 100,
         resizable: true,
-
-        titleBarStyle: 'hidden',
-        titleBarOverlay: true,
 
         webPreferences: {
             nodeIntegration: true,
@@ -79,9 +73,6 @@ function createWindow() {
     localShortcut.register(win, "F", () => win.setFullScreen(!win.isFullScreen()));
 
     remote.enable(win.webContents);
-
-    // attach fullScreen(f11 and not 'maximized') && focus listeners
-    attachTitlebarToWindow(win);
 }
 
 app.whenReady().then(createWindow);
