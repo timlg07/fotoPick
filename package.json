@@ -11,9 +11,9 @@
         "demo2": "electron . ..\\images\\2.JPG"
     },
     "devDependencies": {
-        "electron": "26.2",
-        "electron-builder": "latest",
-        "electron-packager": "latest"
+        "electron": "33.2.1",
+        "electron-builder": "25.1.8",
+        "electron-packager": "17.1.2"
     },
     "build": {
         "appId": "de.tim-greller.fotoPick",
@@ -44,8 +44,9 @@
     },
     "homepage": "https://github.com/timlg07/fotoPick#readme",
     "dependencies": {
-        "blueimp-load-image": "^5.14.0",
-        "custom-electron-titlebar": "3.2.7",
+        "@electron/remote": "^2.1.2",
+        "blueimp-load-image": "^5.16.0",
+        "custom-electron-titlebar": "4.2.8",
         "electron-localshortcut": "^3.2.1"
     }
 }

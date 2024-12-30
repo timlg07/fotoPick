@@ -1,5 +1,6 @@
-const { Titlebar, Themebar } = require('custom-electron-titlebar');
-const { remote, ipcRenderer, clipboard } = require('electron');
+const { Titlebar } = require('custom-electron-titlebar');
+const { ipcRenderer, clipboard } = require('electron');
+const remote = require('@electron/remote')
 const path = require('path');
 const fs = require('fs');
 const loadImage = require('blueimp-load-image');
@@ -7,18 +8,18 @@ const loadImage = require('blueimp-load-image');
 window.addEventListener('DOMContentLoaded', () => {
     /* Decide the theme based on the current operating system. */
     const isWin = (process.platform === 'win32');
-    const theme = isWin ? Themebar.win : Themebar.mac;
+    //const theme = isWin ? Themebar.win : Themebar.mac;
 
     /* Create a new custom titlebar. */
     const customTitlebar = new Titlebar({
-        iconsTheme: theme,
+        //iconsTheme: theme,
         icon: "./../resources/imageViewer.png",
-        shadow: true
+        shadow: false,
     });
 
     const baseTitle = document.title;
     const supportedExtensions = [
-        "jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"
+        "jpg", "jpeg", "arw",
     ];
 
     const util = {
@@ -30,6 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const seperator = " ─ ";
             const newTitle = baseTitle + seperator + titleMessage;
             customTitlebar.updateTitle(newTitle);
+            document.title = newTitle;
         },
 
         get applicationMenu() {
