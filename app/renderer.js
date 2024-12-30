@@ -15,7 +15,7 @@ window.addEventListener('view-ready', event => {
             scaleCanvas();
             util.updateTitle(imgName);
             updateNextPrevMenuItems();
-            
+
             console.log('Exif data: ', data.exif) // requires exif extension
             console.log('IPTC data: ', data.iptc) // requires iptc extension
         }).catch(r => {
@@ -28,8 +28,8 @@ window.addEventListener('view-ready', event => {
     function loadCurrentImage() {
         if (fileIndexInRange(currentImageIndex)) {
             loadImage(
-                images[currentImageIndex][imageType].urlEncoded, 
-                images[currentImageIndex][imageType].baseName, 
+                images[currentImageIndex]['jpg'].urlEncoded, 
+                images[currentImageIndex]['jpg'].baseName, 
             );
         } else {
             util.updateTitle("Nothing to view.");
@@ -132,8 +132,8 @@ window.addEventListener('view-ready', event => {
 
         const jpgs = supportedFiles.filter(util.isJpg).map(filename2obj);
         const raws = supportedFiles.filter(util.isRaw).map(filename2obj);
-        const combined = raws.map(raw => {
-            const jpg = jpgs.find(j => j.baseName === raw.baseName);
+        const combined = jpgs.map(jpg => {
+            const raw = raws.find(r => r.baseName === jpg.baseName);
             return {raw, jpg};
         });
 
@@ -159,7 +159,6 @@ window.addEventListener('view-ready', event => {
 
 
     let images = scanFiles(util.arguments),
-        imageType = 'jpg',
         useCanvas = false, 
         ctrlKeyDown = false,
         autoFitSize = true,
@@ -216,11 +215,6 @@ window.addEventListener('view-ready', event => {
         
         zoomOut() {
             applyZoom(-zoomDelta);
-        },
-
-        toggleRawJpg() {
-            imageType = imageType === 'raw' ? 'jpg' : 'raw';
-            loadCurrentImage();
         }
     };
 
