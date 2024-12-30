@@ -1,7 +1,7 @@
 {
-    "name": "imageviewer",
-    "version": "0.2.0",
-    "description": "A solid, minimalistic and fast image viewer. Implemented as electron app.",
+    "name": "fotopick",
+    "version": "0.1.0",
+    "description": "View your RAW and JPEG photos combined, delete bad ones and pick your favorites. Perfect for a quick preselect before loading them in Lightroom or similar.",
     "main": "main.js",
     "scripts": {
         "start": "electron .",
@@ -16,7 +16,7 @@
         "electron-packager": "latest"
     },
     "build": {
-        "appId": "de.tim-greller.imageViewer",
+        "appId": "de.tim-greller.fotoPick",
         "directories": {
             "output": "dist"
         },
@@ -35,14 +35,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/timlg07/imageViewer.git"
+        "url": "git+https://github.com/timlg07/fotoPick.git"
     },
     "author": "Tim L. Greller",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/timlg07/imageViewer/issues"
+        "url": "https://github.com/timlg07/fotoPick/issues"
     },
-    "homepage": "https://github.com/timlg07/imageViewer#readme",
+    "homepage": "https://github.com/timlg07/fotoPick#readme",
     "dependencies": {
         "blueimp-load-image": "^5.14.0",
         "custom-electron-titlebar": "3.2.7",
