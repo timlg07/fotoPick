@@ -11,6 +11,13 @@ const channels = {
         fit: 'setSizeToFitWin',
         zoomIn: 'zoomIn',
         zoomOut: 'zoomOut'
+    },
+    edit: {
+        fav: 'markAsFavorite',
+        del: 'deleteBoth',
+        delRaw: 'deleteRaw',
+        delJpg: 'deleteJpg',
+        usebin: 'toggleUseRecycleBin'
     }
 }
 
@@ -53,6 +60,47 @@ module.exports = {
                     {
                         role: (isMac ? "close" : "quit"),
                         accelerator: 'Ctrl+W'
+                    }
+                ]
+            },
+            {
+                label: "Edit",
+                submenu: [
+                    {
+                        label: "Mark as favorite",
+                        id: "fav",
+                        click: () => win.webContents.send(channels.edit.fav),
+                        accelerator: 'M'
+                    },
+                    {
+                        type: "separator"
+                    },
+                    {
+                        label: "delete RAW and JPG",
+                        id: "del",
+                        click: () => win.webContents.send(channels.edit.del),
+                        accelerator: 'Delete'
+                    },
+                    {
+                        label: "delete RAW",
+                        id: "delRaw",
+                        click: () => win.webContents.send(channels.edit.delRaw),
+                        accelerator: 'Shift+Delete'
+                    },
+                    {
+                        label: "delete JPG",
+                        id: "delJpg",
+                        click: () => win.webContents.send(channels.edit.delJpg),
+                        accelerator: 'Ctrl+Delete'
+                    },
+                    {
+                        label: "Mark for deletion instead of deleting",
+                        id: "recyclebin",
+                        type: "checkbox",
+                        checked: true,
+                        click: o => {
+                            win.webContents.send(channels.edit.usebin);
+                        }
                     }
                 ]
             },

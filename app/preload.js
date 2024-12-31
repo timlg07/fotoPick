@@ -66,6 +66,27 @@ window.addEventListener('DOMContentLoaded', () => {
             clipboard.writeImage(img);
         },
 
+        deleteFile(filepath) {
+            fs.unlink(filepath, err => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        },
+
+        moveFileToRecycleBin(filepath) {
+            const fileBasePath = path.dirname(filepath);
+            const recycleBinPath = path.resolve(fileBasePath, "recyclebin");
+            if (!fs.existsSync(recycleBinPath)) {
+                fs.mkdirSync(recycleBinPath);
+            }
+            fs.rename(filepath, path.resolve(recycleBinPath, util.getFileName(filepath)), err => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        },
+
         loadImage: loadImage,
         ipcRenderer: ipcRenderer
     }

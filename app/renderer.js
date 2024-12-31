@@ -159,6 +159,9 @@ window.addEventListener('view-ready', event => {
 
 
     let images = scanFiles(util.arguments),
+        recyclebin = [],
+        favorites = [],
+        useRecycleBin = true,
         useCanvas = false, 
         ctrlKeyDown = false,
         autoFitSize = true,
@@ -215,6 +218,48 @@ window.addEventListener('view-ready', event => {
         
         zoomOut() {
             applyZoom(-zoomDelta);
+        },
+
+        markAsFavorite() {
+            console.log('Marked as favorite');
+        },
+
+        deleteBoth() {
+            if (useRecycleBin) {
+                util.moveFileToRecycleBin(images[currentImageIndex].raw.urlNotEncoded);
+                util.moveFileToRecycleBin(images[currentImageIndex].jpg.urlNotEncoded);
+                recyclebin.push(images[currentImageIndex]);
+            } else {
+                util.deleteFile(images[currentImageIndex].raw.urlNotEncoded);
+                util.deleteFile(images[currentImageIndex].jpg.urlNotEncoded);
+            }
+            images.splice(currentImageIndex, 1);
+            loadCurrentImage();
+        },
+
+        deleteRaw() {
+            if (useRecycleBin) {
+                util.moveFileToRecycleBin(images[currentImageIndex].raw.urlNotEncoded);
+                recyclebin.push(images[currentImageIndex]);
+            } else {
+                util.deleteFile(images[currentImageIndex].raw.urlNotEncoded);
+            }
+            images[currentImageIndex].raw = null;
+        },
+
+        deleteJpg() {
+            if (useRecycleBin) {
+                util.moveFileToRecycleBin(images[currentImageIndex].jpg.urlNotEncoded);
+                recyclebin.push(images[currentImageIndex]);
+            } else {
+                util.deleteFile(images[currentImageIndex].jpg.urlNotEncoded);
+            }
+            images.splice(currentImageIndex, 1);
+            loadCurrentImage();
+        },
+
+        toggleUseRecycleBin() {
+            useRecycleBin = !useRecycleBin;
         }
     };
 
