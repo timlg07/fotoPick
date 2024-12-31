@@ -4,7 +4,7 @@ window.addEventListener('util-ready', event => {
     const view = (function() {
         const imgContainer = document.getElementById('image-container');
         const favoriteIcon = document.getElementById('favorite-icon');
-        const menuItemIds = ['next', 'prev', 'canvas', 'fitSize'];
+        const menuItemIds = ['next', 'prev', 'canvas', 'fitSize', 'fav'];
         const menuItems = {};
 
         menuItemIds.forEach(id => {
@@ -70,6 +70,9 @@ window.addEventListener('util-ready', event => {
                     svgIsFav.style.display = 'none';
                     svgNotFav.style.display = 'block';
                 }
+
+                // Update the menu item.
+                menuItems.fav.checked = isFavorite;
             }
         };
     })();

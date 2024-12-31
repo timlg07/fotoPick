@@ -69,6 +69,7 @@ module.exports = {
                     {
                         label: "Mark as favorite",
                         id: "fav",
+                        type: "checkbox",
                         click: () => win.webContents.send(channels.edit.fav),
                         accelerator: 'M'
                     },

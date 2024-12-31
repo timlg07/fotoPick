@@ -33,7 +33,7 @@ function createWindow() {
         minWidth: 180,
         minHeight: 100,
         resizable: true,
-        autoHideMenuBar: true,
+        // autoHideMenuBar: true,
 
         webPreferences: {
             nodeIntegration: true,
