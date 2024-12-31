@@ -3,6 +3,7 @@ window.addEventListener('util-ready', event => {
 
     const view = (function() {
         const imgContainer = document.getElementById('image-container');
+        const favoriteIcon = document.getElementById('favorite-icon');
         const menuItemIds = ['next', 'prev', 'canvas', 'fitSize'];
         const menuItems = {};
 
@@ -53,6 +54,22 @@ window.addEventListener('util-ready', event => {
             updateNextPrevMenuItems(prev, next) {
                 menuItems.next.enabled = next;
                 menuItems.prev.enabled = prev;
+            },
+
+            get favoriteIcon() {
+                return favoriteIcon;
+            },
+
+            toggleFavoriteIcon(isFavorite) {
+                const svgIsFav = favoriteIcon.querySelector('svg.is-favorite');
+                const svgNotFav = favoriteIcon.querySelector('svg.not-favorite');
+                if (isFavorite) {
+                    svgIsFav.style.display = 'block';
+                    svgNotFav.style.display = 'none';
+                } else {
+                    svgIsFav.style.display = 'none';
+                    svgNotFav.style.display = 'block';
+                }
             }
         };
     })();

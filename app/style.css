@@ -16,3 +16,24 @@ body {
 #image-container * {
     margin: auto;
 }
+
+#favorite-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+
+    color: #fff;
+    cursor: pointer;
+
+    padding: 0;
+    margin: .5rem;
+    border: none;
+    background: none;
+}
+
+#favorite-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+}

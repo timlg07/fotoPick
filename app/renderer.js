@@ -15,6 +15,7 @@ window.addEventListener('view-ready', event => {
             scaleCanvas();
             util.updateTitle(imgName);
             updateNextPrevMenuItems();
+            view.toggleFavoriteIcon(images[currentImageIndex].favorite);
 
             console.log('Exif data: ', data.exif) // requires exif extension
             console.log('IPTC data: ', data.iptc) // requires iptc extension
@@ -123,9 +124,10 @@ window.addEventListener('view-ready', event => {
 
     function scanFiles(files) {
         let supportedFiles = files.filter(util.isImage);
+        const addFilesFromFolder = supportedFiles.length === 1;
 
         // If only one file is given, add everything else in the same dir as well.
-        if (supportedFiles.length === 1) {
+        if (addFilesFromFolder) {
             const otherFiles = util.getAllFilesInSameDir(supportedFiles[0]);
             supportedFiles = supportedFiles.concat(otherFiles.filter(util.isImage));
         }
@@ -134,8 +136,20 @@ window.addEventListener('view-ready', event => {
         const raws = supportedFiles.filter(util.isRaw).map(filename2obj);
         const combined = jpgs.map(jpg => {
             const raw = raws.find(r => r.baseName === jpg.baseName);
-            return {raw, jpg};
+            return {raw, jpg, favorite: false};
         });
+
+        if (addFilesFromFolder) {
+            const favs = util.getAllFilesInFavoritesDir(supportedFiles[0]);
+            const jpgFavs = favs.filter(util.isJpg).map(filename2obj);
+            const rawFavs = favs.filter(util.isRaw).map(filename2obj);
+            const favsCombined = jpgFavs.map(jpg => {
+                const raw = rawFavs.find(r => r.baseName === jpg.baseName);
+                return {raw, jpg, favorite: true};
+            });
+            
+            combined.unshift(...favsCombined);
+        }
 
         return combined;
     }
@@ -221,13 +235,26 @@ window.addEventListener('view-ready', event => {
         },
 
         markAsFavorite() {
-            console.log('Marked as favorite');
+            if (images[currentImageIndex].favorite) {
+                const newFilePathJpg = util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "..");
+                const newFilePathRaw = util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "..");
+                images[currentImageIndex].jpg = filename2obj(newFilePathJpg);
+                images[currentImageIndex].raw = filename2obj(newFilePathRaw);
+            } else {
+                const newFilePathJpg = util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "favorites");
+                const newFilePathRaw = util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "favorites");
+                images[currentImageIndex].jpg = filename2obj(newFilePathJpg);
+                images[currentImageIndex].raw = filename2obj(newFilePathRaw);
+            }
+            
+            images[currentImageIndex].favorite = !images[currentImageIndex].favorite;
+            view.toggleFavoriteIcon(images[currentImageIndex].favorite);
         },
 
         deleteBoth() {
             if (useRecycleBin) {
-                util.moveFileToRecycleBin(images[currentImageIndex].raw.urlNotEncoded);
-                util.moveFileToRecycleBin(images[currentImageIndex].jpg.urlNotEncoded);
+                util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "recyclebin");
+                util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "recyclebin");
                 recyclebin.push(images[currentImageIndex]);
             } else {
                 util.deleteFile(images[currentImageIndex].raw.urlNotEncoded);
@@ -239,7 +266,7 @@ window.addEventListener('view-ready', event => {
 
         deleteRaw() {
             if (useRecycleBin) {
-                util.moveFileToRecycleBin(images[currentImageIndex].raw.urlNotEncoded);
+                util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "recyclebin");
                 recyclebin.push(images[currentImageIndex]);
             } else {
                 util.deleteFile(images[currentImageIndex].raw.urlNotEncoded);
@@ -249,7 +276,7 @@ window.addEventListener('view-ready', event => {
 
         deleteJpg() {
             if (useRecycleBin) {
-                util.moveFileToRecycleBin(images[currentImageIndex].jpg.urlNotEncoded);
+                util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "recyclebin");
                 recyclebin.push(images[currentImageIndex]);
             } else {
                 util.deleteFile(images[currentImageIndex].jpg.urlNotEncoded);
@@ -262,6 +289,8 @@ window.addEventListener('view-ready', event => {
             useRecycleBin = !useRecycleBin;
         }
     };
+
+    view.favoriteIcon.addEventListener('click', () => void channelListeners.markAsFavorite());
 
     Object.keys(channelListeners).forEach(key => {
         util.ipcRenderer.on(key, channelListeners[key]);

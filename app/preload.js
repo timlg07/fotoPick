@@ -52,7 +52,20 @@ window.addEventListener('DOMContentLoaded', () => {
         },
 
         getAllFilesInSameDir(filepath) {
+            console.log(filepath);
+            console.log(path.dirname(filepath));
+            console.log(util.getAbsolutePath(path.dirname(filepath)));
             const dirpath = util.getAbsolutePath(path.dirname(filepath));
+            const filenames = fs.readdirSync(dirpath);
+            const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
+            return absolutPaths;
+        },
+
+        getAllFilesInFavoritesDir(filepath) {
+            console.log(filepath);
+            console.log(path.dirname(filepath));
+            console.log(path.dirname(filepath)+"/favorites");
+            const dirpath = util.getAbsolutePath(path.dirname(filepath)+"/favorites");
             const filenames = fs.readdirSync(dirpath);
             const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
             return absolutPaths;
@@ -74,17 +87,20 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         },
 
-        moveFileToRecycleBin(filepath) {
+        moveToFolder(filepath, folder) {
             const fileBasePath = path.dirname(filepath);
-            const recycleBinPath = path.resolve(fileBasePath, "recyclebin");
-            if (!fs.existsSync(recycleBinPath)) {
-                fs.mkdirSync(recycleBinPath);
+            const folderPath = path.resolve(fileBasePath, folder);
+            if (!fs.existsSync(folderPath)) {
+                fs.mkdirSync(folderPath);
             }
-            fs.rename(filepath, path.resolve(recycleBinPath, util.getFileName(filepath)), err => {
+            const newFilePath = path.resolve(folderPath, util.getFileName(filepath));
+            console.log(newFilePath);
+            fs.rename(filepath, newFilePath, err => {
                 if (err) {
                     console.error(err);
                 }
             });
+            return newFilePath;
         },
 
         loadImage: loadImage,
