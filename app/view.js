@@ -4,7 +4,7 @@ window.addEventListener('util-ready', event => {
     const view = (function() {
         const imgContainer = document.getElementById('image-container');
         const favoriteIcon = document.getElementById('favorite-icon');
-        const menuItemIds = ['next', 'prev', 'canvas', 'fitSize', 'fav'];
+        const menuItemIds = ['next', 'prev', 'canvas', 'fitSize', 'fav', 'del', 'delRaw', 'delJpg'];
         const menuItems = {};
 
         menuItemIds.forEach(id => {
@@ -54,6 +54,13 @@ window.addEventListener('util-ready', event => {
             updateNextPrevMenuItems(prev, next) {
                 menuItems.next.enabled = next;
                 menuItems.prev.enabled = prev;
+            },
+
+            updateEditOptions(isEnabled) {
+                menuItems.fav.enabled = isEnabled;
+                menuItems.del.enabled = isEnabled;
+                menuItems.delRaw.enabled = isEnabled;
+                menuItems.delJpg.enabled = isEnabled;
             },
 
             get favoriteIcon() {

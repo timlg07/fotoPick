@@ -3,6 +3,7 @@ window.addEventListener('view-ready', event => {
 
     function loadImage(imgPath, imgName) {
         view.updateNextPrevMenuItems(false, false);
+        view.updateEditOptions(false);
         util.updateTitle("Loading.");
         util.loadImage(imgPath, {
             orientation: true,
@@ -15,6 +16,7 @@ window.addEventListener('view-ready', event => {
             scaleCanvas();
             util.updateTitle(imgName);
             updateNextPrevMenuItems();
+            view.updateEditOptions(true);
             view.toggleFavoriteIcon(images[currentImageIndex].favorite);
         }).catch(r => {
             view.displayedImage = null;
@@ -32,6 +34,7 @@ window.addEventListener('view-ready', event => {
         } else {
             util.updateTitle("Nothing to view.");
             updateNextPrevMenuItems();
+            view.updateEditOptions(false);
         }
     }
 
@@ -231,6 +234,7 @@ window.addEventListener('view-ready', event => {
         },
 
         markAsFavorite() {
+            if (images.length === 0) return;
             if (images[currentImageIndex].favorite) {
                 const newFilePathJpg = util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "..");
                 const newFilePathRaw = util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "..");
@@ -248,6 +252,7 @@ window.addEventListener('view-ready', event => {
         },
 
         deleteBoth() {
+            if (images.length === 0) return;
             if (useRecycleBin) {
                 util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "recyclebin");
                 util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "recyclebin");
@@ -261,6 +266,7 @@ window.addEventListener('view-ready', event => {
         },
 
         deleteRaw() {
+            if (images.length === 0) return;
             if (useRecycleBin) {
                 util.moveToFolder(images[currentImageIndex].raw.urlNotEncoded, "recyclebin");
                 recyclebin.push(images[currentImageIndex]);
@@ -271,6 +277,7 @@ window.addEventListener('view-ready', event => {
         },
 
         deleteJpg() {
+            if (images.length === 0) return;
             if (useRecycleBin) {
                 util.moveToFolder(images[currentImageIndex].jpg.urlNotEncoded, "recyclebin");
                 recyclebin.push(images[currentImageIndex]);
