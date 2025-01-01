@@ -17,7 +17,7 @@ function createWindow() {
     const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
     const files = {
-        icon:    path.join(app.getAppPath(), "resources", "imageViewer.png"),
+        icon:    path.join(app.getAppPath(), "resources", "fotoPick.png"),
         preload: path.join(app.getAppPath(), "app", "preload.js"),
         index:   path.join(app.getAppPath(), "app", "index.html")
     }
