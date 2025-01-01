@@ -10,15 +10,12 @@ window.addEventListener('view-ready', event => {
             canvas: useCanvas
         }).then(data => {
             view.displayedImage = data.image;
-            currentImageHeight = data.originalHeight;
-            currentImageWidth = data.originalWidth;
+            currentImageHeight = data.exif.get('Orientation') > 4 ? data.originalWidth : data.originalHeight;
+            currentImageWidth  = data.exif.get('Orientation') > 4 ? data.originalHeight : data.originalWidth;
             scaleCanvas();
             util.updateTitle(imgName);
             updateNextPrevMenuItems();
             view.toggleFavoriteIcon(images[currentImageIndex].favorite);
-
-            console.log('Exif data: ', data.exif) // requires exif extension
-            console.log('IPTC data: ', data.iptc) // requires iptc extension
         }).catch(r => {
             view.displayedImage = null;
             util.updateTitle("Error loading the image.");
