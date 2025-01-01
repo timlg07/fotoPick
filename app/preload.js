@@ -52,9 +52,6 @@ window.addEventListener('DOMContentLoaded', () => {
         },
 
         getAllFilesInSameDir(filepath) {
-            console.log(filepath);
-            console.log(path.dirname(filepath));
-            console.log(util.getAbsolutePath(path.dirname(filepath)));
             const dirpath = util.getAbsolutePath(path.dirname(filepath));
             const filenames = fs.readdirSync(dirpath);
             const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
@@ -62,13 +59,14 @@ window.addEventListener('DOMContentLoaded', () => {
         },
 
         getAllFilesInFavoritesDir(filepath) {
-            console.log(filepath);
-            console.log(path.dirname(filepath));
-            console.log(path.dirname(filepath)+"/favorites");
-            const dirpath = util.getAbsolutePath(path.dirname(filepath)+"/favorites");
-            const filenames = fs.readdirSync(dirpath);
-            const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
-            return absolutPaths;
+            const dirpath = util.getAbsolutePath(path.dirname(filepath) + "/favorites");
+            if (fs.existsSync(dirpath)) {
+                const filenames = fs.readdirSync(dirpath);
+                const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
+                return absolutPaths;
+            } else {
+                return [];
+            }
         },
 
         getAbsolutePath(filepath) {

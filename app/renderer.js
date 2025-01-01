@@ -174,7 +174,6 @@ window.addEventListener('view-ready', event => {
 
     let images = scanFiles(util.arguments),
         recyclebin = [],
-        favorites = [],
         useRecycleBin = true,
         useCanvas = false, 
         ctrlKeyDown = false,
