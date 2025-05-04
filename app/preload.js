@@ -54,7 +54,8 @@ window.addEventListener('DOMContentLoaded', () => {
         getAllFilesInSameDir(filepath) {
             const dirpath = util.getAbsolutePath(path.dirname(filepath));
             const filenames = fs.readdirSync(dirpath);
-            const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
+            const sortedFilenames = filenames.sort((a, b) => a.localeCompare(b));
+            const absolutPaths = sortedFilenames.map(f => path.resolve(dirpath, f));
             return absolutPaths;
         },
 
@@ -62,7 +63,8 @@ window.addEventListener('DOMContentLoaded', () => {
             const dirpath = util.getAbsolutePath(path.dirname(filepath) + "/favorites");
             if (fs.existsSync(dirpath)) {
                 const filenames = fs.readdirSync(dirpath);
-                const absolutPaths = filenames.map(f => path.resolve(dirpath, f));
+                const sortedFilenames = filenames.sort((a, b) => a.localeCompare(b));
+                const absolutPaths = sortedFilenames.map(f => path.resolve(dirpath, f));
                 return absolutPaths;
             } else {
                 return [];
