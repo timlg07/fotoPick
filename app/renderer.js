@@ -151,6 +151,12 @@ window.addEventListener('view-ready', event => {
             combined.unshift(...favsCombined);
         }
 
+        if (sortByName) {
+            combined = combined.sort((a, b) => {
+                return a.jpg.baseName.localeCompare(b.jpg.baseName);
+            });
+        }
+
         return combined;
     }
     
@@ -172,7 +178,8 @@ window.addEventListener('view-ready', event => {
     }
 
 
-    let images = scanFiles(util.arguments),
+    let sortByName = false,
+        images = scanFiles(util.arguments),
         recyclebin = [],
         useRecycleBin = true,
         useCanvas = false, 
@@ -199,6 +206,18 @@ window.addEventListener('view-ready', event => {
 
         switchToPrevImage() {
             switchImage(currentImageIndex - 1);
+        },
+
+        sortByFavorites() {
+            sortByName = !sortByName;
+
+            images = images.sort((a, b) => {
+                if (!sortByName) {
+                    if (a.favorite && !b.favorite) return -1;
+                    if (!a.favorite && b.favorite) return 1;
+                } 
+                return a.jpg.baseName.localeCompare(b.jpg.baseName);
+            });
         },
 
         copyImgToClipboard() {

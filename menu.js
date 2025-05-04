@@ -4,6 +4,7 @@ const isMac = (process.platform === 'darwin');
 const channels = {
     next: 'switchToNextImage',
     prev: 'switchToPrevImage',
+    sort: 'sortByFavorites',
     copy: 'copyImgToClipboard',
     canv: 'toggleCanvasMode',
     size: {
@@ -44,6 +45,14 @@ module.exports = {
                         id: "prev",
                         click: () => win.webContents.send(channels.prev),
                         accelerator: 'Left'
+                    },
+                    
+                    {
+                        type: "checkbox",
+                        label: "Show favorites first",
+                        id: "showFavsFirst",
+                        checked: true,
+                        click: () => win.webContents.send(channels.sort)
                     },
                     {
                         type: "separator"
