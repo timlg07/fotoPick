@@ -1,6 +1,6 @@
 {
     "name": "fotopick",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "View your RAW and JPEG photos combined, delete bad ones and pick your favorites. Perfect for a quick preselect before loading them in Lightroom or similar.",
     "main": "main.js",
     "scripts": {
@@ -8,11 +8,12 @@
         "dist": "electron-builder",
         "test": "echo \"Error: no test specified\" && exit 1",
         "demo": "electron . ..\\images\\DSC0.ARW ..\\images\\DSC0.JPG ..\\images\\DSC1.ARW ..\\images\\DSC1.JPG",
-        "demo2": "electron . ..\\images\\DSC0.ARW"
+        "demo2": "electron . ..\\images\\DSC0.ARW",
+        "demo3": "electron . ..\\images\\DSC1.ARW"
     },
     "devDependencies": {
         "electron": "33.2.1",
-        "electron-builder": "25.1.8",
+        "electron-builder": "26.15.3",
         "electron-packager": "17.1.2"
     },
     "build": {
@@ -47,5 +48,9 @@
         "@electron/remote": "^2.1.2",
         "blueimp-load-image": "^5.16.0",
         "electron-localshortcut": "^3.2.1"
+    },
+    "allowScripts": {
+        "electron@33.2.1": true,
+        "electron-winstaller@5.4.0": true
     }
 }

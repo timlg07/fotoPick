@@ -51,7 +51,7 @@ module.exports = {
                         type: "checkbox",
                         label: "Show favorites first",
                         id: "showFavsFirst",
-                        checked: true,
+                        checked: false,
                         click: () => win.webContents.send(channels.sort)
                     },
                     {

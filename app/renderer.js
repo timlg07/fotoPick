@@ -134,7 +134,7 @@ window.addEventListener('view-ready', event => {
 
         const jpgs = supportedFiles.filter(util.isJpg).map(filename2obj);
         const raws = supportedFiles.filter(util.isRaw).map(filename2obj);
-        const combined = jpgs.map(jpg => {
+        let combined = jpgs.map(jpg => {
             const raw = raws.find(r => r.baseName === jpg.baseName);
             return {raw, jpg, favorite: false};
         });
@@ -155,6 +155,16 @@ window.addEventListener('view-ready', event => {
             combined = combined.sort((a, b) => {
                 return a.jpg.baseName.localeCompare(b.jpg.baseName);
             });
+        }
+
+        currentImageIndex = 0;
+        if (addFilesFromFolder) {
+            let currentFileName = util.getFileName(supportedFiles[0]);
+            currentFileName = currentFileName.substring(0, currentFileName.length - util.getExtension(currentFileName).length - 1);
+            const currentIndex = combined.findIndex(f =>  f.jpg.baseName === currentFileName);
+            if (currentIndex !== -1) {
+                currentImageIndex = currentIndex;
+            }
         }
 
         return combined;
@@ -178,8 +188,7 @@ window.addEventListener('view-ready', event => {
     }
 
 
-    let sortByName = false,
-        images = scanFiles(util.arguments),
+    let sortByName = true,
         recyclebin = [],
         useRecycleBin = true,
         useCanvas = false, 
@@ -189,7 +198,8 @@ window.addEventListener('view-ready', event => {
         currentCanvasScale = 1,
         currentImageIndex  = 0,
         currentImageWidth  = 0,
-        currentImageHeight = 0;
+        currentImageHeight = 0,
+        images = scanFiles(util.arguments);
 
     updateNextPrevMenuItems();
     loadCurrentImage();
@@ -218,6 +228,10 @@ window.addEventListener('view-ready', event => {
                 } 
                 return a.jpg.baseName.localeCompare(b.jpg.baseName);
             });
+
+            if (!sortByName) {
+                switchImage(0)
+            }
         },
 
         copyImgToClipboard() {

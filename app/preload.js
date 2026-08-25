@@ -13,9 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
         },
 
         updateTitle(titleMessage) {
-            const seperator = " ─ ";
-            const newTitle = baseTitle + seperator + titleMessage;
-            document.title = newTitle;
+            const separator = " ─ ";
+            document.title = baseTitle + separator + titleMessage;
         },
 
         get applicationMenu() {
