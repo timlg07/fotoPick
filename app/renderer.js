@@ -72,10 +72,17 @@ window.addEventListener('view-ready', event => {
     function zoomCanvas(event) {
         const scrollAmount = event.deltaY / 90;
         const inverse = -1;
-        applyZoom(inverse * scrollAmount * zoomDelta);
+        applyZoom(inverse * scrollAmount * zoomDelta, event.clientX, event.clientY);
     }
 
-    function applyZoom(amount) {
+    function applyZoom(amount, anchorX, anchorY) {
+        const imageRect = view.displayedImageBoundingRect;
+        const oldScale = currentCanvasScale;
+        const imageX = anchorX === undefined ? null : (anchorX - imageRect.left) / oldScale;
+        const imageY = anchorY === undefined ? null : (anchorY - imageRect.top) / oldScale;
+        const oldScrollLeft = view.imageContainerScrollLeft;
+        const oldScrollTop = view.imageContainerScrollTop;
+
         autoFitSize = false;
         currentCanvasScale += amount;
 
@@ -84,6 +91,16 @@ window.addEventListener('view-ready', event => {
         }
 
         scaleCanvas();
+
+        if (imageX !== null && currentCanvasScale > 0) {
+            const newImageRect = view.displayedImageBoundingRect;
+            view.imageContainerScrollLeft = oldScrollLeft
+                + (newImageRect.left - imageRect.left)
+                + imageX * (currentCanvasScale - oldScale);
+            view.imageContainerScrollTop = oldScrollTop
+                + (newImageRect.top - imageRect.top)
+                + imageY * (currentCanvasScale - oldScale);
+        }
     }
 
     function mouseWheel(event) {
@@ -99,6 +116,13 @@ window.addEventListener('view-ready', event => {
         return Math.sqrt(horizontalDistance ** 2 + verticalDistance ** 2);
     }
 
+    function touchMidpoint(touches) {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+    }
+
     function touchZoom(event) {
         if (event.touches.length < 2) {
             pinchDistance = null;
@@ -110,9 +134,9 @@ window.addEventListener('view-ready', event => {
             pinchDistance = distance;
             pinchScale = currentCanvasScale;
         } else if (distance > 0) {
-            autoFitSize = false;
-            currentCanvasScale = Math.max(0, pinchScale * distance / pinchDistance);
-            scaleCanvas();
+            const midpoint = touchMidpoint(event.touches);
+            const targetScale = pinchScale * distance / pinchDistance;
+            applyZoom(targetScale - currentCanvasScale, midpoint.x, midpoint.y);
         }
 
         event.preventDefault();

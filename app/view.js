@@ -36,6 +36,26 @@ window.addEventListener('util-ready', event => {
                 return imgContainer.firstChild;
             },
 
+            get displayedImageBoundingRect() {
+                return imgContainer.firstChild.getBoundingClientRect();
+            },
+
+            get imageContainerScrollLeft() {
+                return imgContainer.scrollLeft;
+            },
+
+            set imageContainerScrollLeft(position) {
+                imgContainer.scrollLeft = position;
+            },
+
+            get imageContainerScrollTop() {
+                return imgContainer.scrollTop;
+            },
+
+            set imageContainerScrollTop(position) {
+                imgContainer.scrollTop = position;
+            },
+
             set autoFitSize(enabled) {
                 const classname = "scroll";
                 if (enabled) {
