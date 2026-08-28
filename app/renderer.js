@@ -97,6 +97,16 @@ window.addEventListener('view-ready', event => {
         if (event.keyCode === 17) {
             ctrlKeyDown = true;
         }
+
+        // switch image even when zoomed in (scrolling captures the arrow keys by default)
+        if (event.key === "ArrowLeft") {
+            switchImage(currentImageIndex - 1);
+            event.preventDefault();
+        }
+        if (event.key === "ArrowRight") {
+            switchImage(currentImageIndex + 1);
+            event.preventDefault();
+        }
     }
     
     function keyUp(event) {
