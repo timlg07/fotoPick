@@ -51,6 +51,13 @@ window.addEventListener('util-ready', event => {
                 imgContainer.addEventListener('wheel', fn);
             },
 
+            addTouchHandler(fn) {
+                imgContainer.addEventListener('touchstart', fn, { passive: false });
+                imgContainer.addEventListener('touchmove', fn, { passive: false });
+                imgContainer.addEventListener('touchend', fn, { passive: false });
+                imgContainer.addEventListener('touchcancel', fn, { passive: false });
+            },
+
             updateNextPrevMenuItems(prev, next) {
                 menuItems.next.enabled = next;
                 menuItems.prev.enabled = prev;

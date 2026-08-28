@@ -93,6 +93,31 @@ window.addEventListener('view-ready', event => {
         }
     }
 
+    function touchDistance(touches) {
+        const horizontalDistance = touches[0].clientX - touches[1].clientX;
+        const verticalDistance = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(horizontalDistance ** 2 + verticalDistance ** 2);
+    }
+
+    function touchZoom(event) {
+        if (event.touches.length < 2) {
+            pinchDistance = null;
+            return;
+        }
+
+        const distance = touchDistance(event.touches);
+        if (pinchDistance === null) {
+            pinchDistance = distance;
+            pinchScale = currentCanvasScale;
+        } else if (distance > 0) {
+            autoFitSize = false;
+            currentCanvasScale = Math.max(0, pinchScale * distance / pinchDistance);
+            scaleCanvas();
+        }
+
+        event.preventDefault();
+    }
+
     function keyDown(event) {
         if (event.keyCode === 17) {
             ctrlKeyDown = true;
@@ -206,6 +231,8 @@ window.addEventListener('view-ready', event => {
         autoFitSize = true,
         zoomDelta = .01,
         currentCanvasScale = 1,
+        pinchDistance = null,
+        pinchScale = 1,
         currentImageIndex  = 0,
         currentImageWidth  = 0,
         currentImageHeight = 0,
@@ -218,6 +245,7 @@ window.addEventListener('view-ready', event => {
     window.addEventListener('keydown', keyDown);
     window.addEventListener('keyup', keyUp);
     view.addWheelHandler(mouseWheel);
+    view.addTouchHandler(touchZoom);
 
     const channelListeners = {
         switchToNextImage() {
