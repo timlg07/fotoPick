@@ -1,6 +1,6 @@
 {
     "name": "fotopick",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "View your RAW and JPEG photos combined, delete bad ones and pick your favorites. Perfect for a quick preselect before loading them in Lightroom or similar.",
     "main": "main.js",
     "scripts": {
