@@ -78,6 +78,10 @@ window.addEventListener('util-ready', event => {
                 imgContainer.addEventListener('touchcancel', fn, { passive: false });
             },
 
+            addClickHandler(fn) {
+                imgContainer.addEventListener('dblclick', fn);
+            },
+
             updateNextPrevMenuItems(prev, next) {
                 menuItems.next.enabled = next;
                 menuItems.prev.enabled = prev;

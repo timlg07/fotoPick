@@ -142,6 +142,36 @@ window.addEventListener('view-ready', event => {
         event.preventDefault();
     }
 
+    function handleDoubleTap(event) {
+        // Track if current touch sequence uses multiple fingers
+        if (event.touches.length > 1) {
+            wasTouchMultiTouch = true;
+            return;
+        }
+        
+        // Reset multi-touch flag on new single-touch
+        if (event.type === 'touchstart' && event.touches.length === 1) {
+            wasTouchMultiTouch = false;
+        }
+
+        // Only detect double-tap on touchend when all fingers are lifted
+        if (event.type === 'touchend' && event.touches.length === 0 && !wasTouchMultiTouch) {
+            const now = Date.now();
+            if (now - lastTouchTime < 300) {
+                autoFitSize = true;
+                scaleCanvas();
+                event.preventDefault();
+            }
+            lastTouchTime = now;
+        }
+    }
+
+    function handleDoubleClick(event) {
+        autoFitSize = true;
+        scaleCanvas();
+        event.preventDefault();
+    }
+
     function keyDown(event) {
         if (event.keyCode === 17) {
             ctrlKeyDown = true;
@@ -260,6 +290,8 @@ window.addEventListener('view-ready', event => {
         currentImageIndex  = 0,
         currentImageWidth  = 0,
         currentImageHeight = 0,
+        lastTouchTime = 0,
+        wasTouchMultiTouch = false,
         images = scanFiles(util.arguments);
 
     updateNextPrevMenuItems();
@@ -270,6 +302,8 @@ window.addEventListener('view-ready', event => {
     window.addEventListener('keyup', keyUp);
     view.addWheelHandler(mouseWheel);
     view.addTouchHandler(touchZoom);
+    view.addTouchHandler(handleDoubleTap);
+    view.addClickHandler(handleDoubleClick);
 
     const channelListeners = {
         switchToNextImage() {
